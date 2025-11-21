@@ -1,0 +1,8 @@
+.godot/
+
+
+*.import
+*.uid
+*.tmp
+
+/assets/*
