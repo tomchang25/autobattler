@@ -4,10 +4,9 @@ extends Node
 @export var enabled: bool = true: set = _set_enabled
 @export var play_area: PlayArea
 @export var highlight_layer: TileMapLayer
-@export var tile: Vector2i
 
 @onready var source_id := play_area.tile_set.get_source_id(0)
-
+@onready var highlight_cell_coords := Vector2i(3, 0)
 
 func _process(_delta: float) -> void:
     if not enabled:
@@ -31,4 +30,4 @@ func _set_enabled(new_value: bool) -> void:
 
 func _update_tile(selected_tile: Vector2i) -> void:
     highlight_layer.clear()
-    highlight_layer.set_cell(selected_tile, source_id, tile)
+    highlight_layer.set_cell(selected_tile, source_id, highlight_cell_coords)

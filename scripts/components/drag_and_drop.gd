@@ -6,7 +6,6 @@ signal drag_canceled(starting_position: Vector2)
 signal dropped(starting_position: Vector2)
 
 @export var target: Node2D
-
 @export var enabled: bool = true
 
 

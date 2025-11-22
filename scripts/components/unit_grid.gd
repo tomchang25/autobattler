@@ -1,5 +1,5 @@
 class_name UnitGrid
-extends Node
+extends Node2D
 
 signal unit_grid_changed
 
@@ -13,13 +13,22 @@ func _ready() -> void:
             units[Vector2i(i, j)] = null
 
 
-func add_unit(unit: Node2D, position: Vector2i) -> void:
-    units[position] = unit
-    unit_grid_changed.emit(
-)
+func add_unit(tile: Vector2i, unit: Unit) -> void:
+    units[tile] = unit
+    unit_grid_changed.emit()
 
-func is_tile_occupied(position: Vector2i) -> bool:
-    return units[position] != null
+
+func remove_unit(tile: Vector2i) -> void:
+    var unit := units[tile] as Node
+
+    if not unit:
+        return
+
+    units[tile] = null
+    unit_grid_changed.emit()
+
+func is_tile_occupied(tile: Vector2i) -> bool:
+    return units[tile] != null
 
 func is_grid_full() -> bool:
     return units.keys().all(is_tile_occupied)
