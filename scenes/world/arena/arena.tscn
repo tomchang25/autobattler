@@ -1,7 +1,13 @@
-[gd_scene load_steps=6 format=4 uid="uid://tyvs1r3st220"]
+[gd_scene load_steps=12 format=4 uid="uid://tyvs1r3st220"]
 
 [ext_resource type="TileSet" uid="uid://dx8dcnkgtesco" path="res://resources/tilesets/arena_tileset.tres" id="1_pykbv"]
+[ext_resource type="Script" uid="uid://bgm0t517cbmyq" path="res://scenes/world/arena/arena.gd" id="1_rm8ob"]
 [ext_resource type="Texture2D" uid="uid://mbxv0ayrsu3d" path="res://assets/art/particles/star_particle.png" id="2_buti4"]
+[ext_resource type="PackedScene" uid="uid://dqed3ink2ovfi" path="res://scenes/unit/unit.tscn" id="4_bbir6"]
+[ext_resource type="Script" uid="uid://d0e6w5uoeur0c" path="res://scripts/components/unit_grid.gd" id="4_eo4hy"]
+[ext_resource type="Script" uid="uid://cxqool2f7bwbi" path="res://scripts/components/play_area.gd" id="4_g2g6c"]
+[ext_resource type="Resource" uid="uid://dpyn6kmiithrw" path="res://resources/data_content/units/bjorn.tres" id="5_kqevm"]
+[ext_resource type="Script" uid="uid://dtqj6mssopgsc" path="res://scripts/components/tile_highlighter.gd" id="8_1le3s"]
 
 [sub_resource type="Curve" id="Curve_buti4"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.255385, 1), 0.0, 0.0, 0, 0, Vector2(0.747692, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -26,6 +32,7 @@ scale_curve = SubResource("CurveTexture_rm8ob")
 color = Color(1, 1, 1, 0.313726)
 
 [node name="Arena" type="Node2D"]
+script = ExtResource("1_rm8ob")
 metadata/_edit_lock_ = true
 
 [node name="Visuals" type="Node2D" parent="."]
@@ -37,6 +44,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAQAAAAYAAAAAAAEAAQAAAAYAAAAAAAIAAQAAAAY
 tile_set = ExtResource("1_pykbv")
 
 [node name="Props" type="TileMapLayer" parent="Visuals"]
+modulate = Color(1, 1, 1, 0.392157)
 tile_map_data = PackedByteArray("AAADAAIAAQAHABMAAAATAAcAAQAGABMAAAAQAAMAAQAAABIAAAARAAIAAQAJABMAAAARAAYAAQAAABIAAAAAAAYAAQAGABMAAAABAAAAAQAFABMAAAABAAkAAQAMABMAAAACAAMAAQACABMAAAADAAkAAQAAABIAAAARAAkAAQAGABMAAAA=")
 tile_set = ExtResource("1_pykbv")
 
@@ -53,27 +61,67 @@ texture = ExtResource("2_buti4")
 lifetime = 6.0
 process_material = SubResource("ParticleProcessMaterial_rm8ob")
 
-[node name="GameArea" type="TileMapLayer" parent="."]
+[node name="GameArea" type="TileMapLayer" parent="." node_paths=PackedStringArray("unit_grid")]
 position = Vector2(160, 32)
-tile_map_data = PackedByteArray("AAAAAAEAAQABAAwAAAAAAAMAAQAAAAwAAAABAAAAAQAAAAwAAAABAAIAAQAAAAwAAAABAAQAAQAAAAwAAAACAAEAAQAAAAwAAAACAAMAAQACAAwAAAADAAAAAQAAAAwAAAADAAIAAQAAAAwAAAADAAQAAQAAAAwAAAAEAAEAAQAAAAwAAAAEAAMAAQACAAwAAAAAAAUAAQAAAAwAAAABAAYAAQAAAAwAAAACAAUAAQAAAAwAAAADAAYAAQAAAAwAAAAEAAUAAQAAAAwAAAAFAAAAAQAAAAwAAAAFAAIAAQAAAAwAAAAFAAQAAQABAAwAAAAFAAYAAQABAAwAAAAGAAEAAQAAAAwAAAAGAAMAAQAAAAwAAAAGAAUAAQAAAAwAAAAHAAAAAQAAAAwAAAAHAAIAAQADAAwAAAAHAAQAAQAAAAwAAAAHAAYAAQAAAAwAAAAIAAEAAQABAAwAAAAIAAMAAQAAAAwAAAAIAAUAAQADAAwAAAAJAAAAAQAAAAwAAAAJAAIAAQAAAAwAAAAJAAQAAQAAAAwAAAAJAAYAAQAAAAwAAAAAAAAAAQADAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAEAAQABAAwAAAAAAAMAAQAAAAwAAAABAAAAAQAAAAwAAAABAAIAAQAAAAwAAAABAAQAAQAAAAwAAAACAAEAAQAAAAwAAAACAAMAAQACAAwAAAADAAAAAQAAAAwAAAADAAIAAQAAAAwAAAADAAQAAQAAAAwAAAAEAAEAAQAAAAwAAAAEAAMAAQACAAwAAAAAAAUAAQAAAAwAAAABAAYAAQAAAAwAAAACAAUAAQAAAAwAAAADAAYAAQAAAAwAAAAEAAUAAQAAAAwAAAAFAAAAAQAAAAwAAAAFAAIAAQAAAAwAAAAFAAQAAQABAAwAAAAFAAYAAQABAAwAAAAGAAEAAQAAAAwAAAAGAAMAAQAAAAwAAAAGAAUAAQAAAAwAAAAHAAAAAQAAAAwAAAAHAAIAAQADAAwAAAAHAAQAAQAAAAwAAAAHAAYAAQAAAAwAAAAIAAEAAQABAAwAAAAIAAMAAQAAAAwAAAAIAAUAAQADAAwAAAAJAAAAAQAAAAwAAAAJAAIAAQAAAAwAAAAJAAQAAQAAAAwAAAAJAAYAAQAAAAwAAAA=")
 tile_set = ExtResource("1_pykbv")
-metadata/_edit_lock_ = true
+script = ExtResource("4_g2g6c")
+unit_grid = NodePath("ArenaUnitGrid")
 metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="Decorations" type="TileMapLayer" parent="GameArea"]
+modulate = Color(1, 1, 1, 0.392157)
 tile_map_data = PackedByteArray("AAADAAAAAQABABYAAAAGAAQAAQAAABUAAAAJAAYAAQAAABUAAAAAAAUAAQABABYAAAABAAUAAQAAABYAAAA=")
 tile_set = ExtResource("1_pykbv")
 
 [node name="Highlight" type="TileMapLayer" parent="GameArea"]
+tile_map_data = PackedByteArray("AAAAAAAAAQADAAAAAAA=")
 tile_set = ExtResource("1_pykbv")
 
-[node name="Bench" type="TileMapLayer" parent="."]
+[node name="UnitsLayer" type="CanvasLayer" parent="GameArea"]
+
+[node name="Unit" parent="GameArea/UnitsLayer" instance=ExtResource("4_bbir6")]
+position = Vector2(224, 64)
+stats = ExtResource("5_kqevm")
+
+[node name="Unit2" parent="GameArea/UnitsLayer" instance=ExtResource("4_bbir6")]
+position = Vector2(288, 96)
+stats = ExtResource("5_kqevm")
+
+[node name="Unit3" parent="GameArea/UnitsLayer" instance=ExtResource("4_bbir6")]
+position = Vector2(224, 128)
+stats = ExtResource("5_kqevm")
+
+[node name="ArenaUnitGrid" type="Node" parent="GameArea"]
+script = ExtResource("4_eo4hy")
+size = Vector2i(4, 7)
+
+[node name="TileHighlighter" type="Node" parent="GameArea" node_paths=PackedStringArray("play_area", "highlight_layer")]
+script = ExtResource("8_1le3s")
+play_area = NodePath("..")
+highlight_layer = NodePath("../Highlight")
+tile = Vector2i(3, 0)
+
+[node name="Bench" type="TileMapLayer" parent="." node_paths=PackedStringArray("unit_grid")]
 position = Vector2(160, 320)
 tile_map_data = PackedByteArray("AAAAAAAAAQAAAAsAAAABAAAAAQAAAAcAAAACAAAAAQAAAAsAAAADAAAAAQAAAAcAAAAEAAAAAQAAAAsAAAAFAAAAAQAAAAcAAAAGAAAAAQAAAAsAAAAHAAAAAQAAAAcAAAAIAAAAAQAAAAsAAAAJAAAAAQAAAAcAAAA=")
 tile_set = ExtResource("1_pykbv")
+script = ExtResource("4_g2g6c")
+unit_grid = NodePath("BenchUnitGrid")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="Highlight" type="TileMapLayer" parent="Bench"]
 tile_map_data = PackedByteArray("AAAAAAAAAQADAAAAAAA=")
 tile_set = ExtResource("1_pykbv")
-metadata/_edit_lock_ = true
-metadata/_edit_group_ = true
+
+[node name="BenchUnitGrid" type="Node" parent="Bench"]
+script = ExtResource("4_eo4hy")
+size = Vector2i(10, 1)
+
+[node name="TileHighlighter" type="Node" parent="Bench" node_paths=PackedStringArray("play_area", "highlight_layer")]
+script = ExtResource("8_1le3s")
+play_area = NodePath("..")
+highlight_layer = NodePath("../Highlight")
+tile = Vector2i(3, 0)
